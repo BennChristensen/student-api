@@ -1,7 +1,5 @@
 package dk.eaaa;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +19,7 @@ public class StudentController {
 	Iterable<Student> getAllStudents() {
 		return repository.findAll();
 	}
-	
-	@PostMapping("students")
-	Student newStudent(@RequestBody Student newStudent) {
-		return repository.save(newStudent);
-	}
-	
+		
 	@GetMapping("students/{id}")
 	Student getStudent(@PathVariable long id) {
 		return repository.findById(id)

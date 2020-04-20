@@ -1,18 +1,33 @@
 package dk.eaaa;
 
-import javax.persistence.CascadeType;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Student {
 	
-	private @Id @GeneratedValue Long id;
+	private @Id @GeneratedValue 
+	Long id;
 	private String name;
-	//@ManyToOne(cascade = CascadeType.ALL)
-	//private School school;
+	@ManyToOne()
+	@JoinColumn(name ="school_id")
+	private School school;
+	
+	@ManyToMany
+	@JoinTable(name = "subject_student", 
+				joinColumns = @JoinColumn(name = "subject_id"),
+				inverseJoinColumns = @JoinColumn(name = "student_id"))
+	private Set<Subject> subjects;
 	
 	public Long getId() {
 		return id;
@@ -24,19 +39,14 @@ public class Student {
 		this.name = name;
 	}
 	
-//	public School getSchool() {
-//		return school;
-//	}
-//	
-//	public void setSchool(School school) {
-//		this.school = school;
-//	}
-//	
-//	public Student(String name, School school) {
-//		super();
-//		this.name = name;
-//		this.school = school;
-//	}
+	public School getSchool() {
+		return school;
+	}
+
+	public void setSchool(School school) {
+		this.school = school;
+	}
+
 	
 	public Student(String name) {
 		super();

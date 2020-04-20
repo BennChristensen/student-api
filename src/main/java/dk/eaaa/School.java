@@ -3,21 +3,24 @@ package dk.eaaa;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class School {
 	
-	private @Id @GeneratedValue Long id;
+	@Id 
+	@GeneratedValue(strategy = GenerationType.AUTO) 
+	private Long id;
 	private String name;
-	@OneToMany
-	@JoinColumn(name = "fk_school")
+	@OneToMany(mappedBy = "school")
+	@JsonBackReference 
 	private List<Student> students = new ArrayList<Student>();
 	
 	public School() {}
@@ -28,6 +31,7 @@ public class School {
 	
 	public void addStudent(Student student) {
 		students.add(student);
+		student.setSchool(this);
 	}
 	
 	public List<Student> getStudents() {
@@ -44,5 +48,10 @@ public class School {
 
 	public Long getId() {
 		return id;
+	}
+	
+	public void moveStudent(Student student, School oldSchool) {
+		oldSchool.getStudents().remove(student);
+		this.addStudent(student);
 	}	
 }
